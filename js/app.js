@@ -9,6 +9,12 @@ class App {
         this.libraryAlbums = [];
         this.totalResults = 0;
 
+        // Check if we're returning from auth
+        if (window.location.hash) {
+            // Remove the hash so it doesn't persist
+            history.pushState("", document.title, window.location.pathname);
+        }
+
         this.setupEventListeners();
         this.loadLibrary();
         this.loadTheme();

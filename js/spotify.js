@@ -1,14 +1,31 @@
 class SpotifyClient {
     constructor() {
+        // Use client ID only, no secret needed for this approach
+        this.clientId = '9c18388b794041aca87c4f3d975e580e';
         this.accessToken = null;
     }
 
     async authenticate() {
         try {
-            // Update to use the correct Netlify function URL
-            const response = await fetch('/.netlify/functions/spotify-auth');
-            const data = await response.json();
-            this.accessToken = data.access_token;
+            // Use the Implicit Grant Flow
+            const authUrl = `https://accounts.spotify.com/authorize?client_id=${this.clientId}&response_type=token&redirect_uri=${encodeURIComponent(window.location.origin)}`;
+            
+            // If we don't have a token in URL, redirect to auth
+            if (!window.location.hash) {
+                window.location.href = authUrl;
+                return false;
+            }
+
+            // Extract token from URL hash
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            this.accessToken = params.get('access_token');
+            
+            if (!this.accessToken) {
+                window.location.href = authUrl;
+                return false;
+            }
+
             return true;
         } catch (error) {
             console.error('Authentication failed:', error);
