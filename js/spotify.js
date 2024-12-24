@@ -5,8 +5,8 @@ class SpotifyClient {
 
     async authenticate() {
         try {
-            // Instead of direct authentication, call your server endpoint
-            const response = await fetch('YOUR_SERVER_ENDPOINT/auth');
+            // Update to use the correct Netlify function URL
+            const response = await fetch('/.netlify/functions/spotify-auth');
             const data = await response.json();
             this.accessToken = data.access_token;
             return true;
